@@ -1,17 +1,13 @@
 {
   "manifest_version": 2,
   "name": "yt-dlp-firefox",
-  "version": "1.0",
+  "version": "0.1",
 
-  "description": "Adds a red border to all webpages matching mozilla.org.",
-
-  "icons": {
-    "48": "icons/border-48.png"
-  },
+  "description": "Execute local yt-dlp on Firefox.",
 
   "content_scripts": [
     {
-      "matches": ["*://*.mozilla.org/*"],
+      "matches": ["https://www.youtube.com/*"],
       "js": ["yt_dlp_firefox.js"]
     }
   ]
