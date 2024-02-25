@@ -7,7 +7,7 @@
 
   "content_scripts": [
     {
-      "matches": ["https://www.youtube.com/*"],
+      "matches": ["*://*.mozilla.org/*"],
       "js": ["yt_dlp_firefox.js"]
     }
   ]
