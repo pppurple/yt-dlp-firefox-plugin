@@ -9,7 +9,7 @@
     }
   },
   "icons": {
-    "48": "icons/message.svg"
+    "48": "icons/yt.svg"
   },
   "browser_specific_settings": {
     "gecko": {
@@ -23,7 +23,7 @@
     ]
   },
   "browser_action": {
-    "default_icon": "icons/message.svg"
+    "default_icon": "icons/yt.svg"
   },
   "permissions": [
     "nativeMessaging"
