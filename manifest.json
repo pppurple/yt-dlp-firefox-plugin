@@ -23,9 +23,14 @@
     ]
   },
   "browser_action": {
-    "default_icon": "icons/32.png"
+    "default_icon": "icons/32.png",
+    "default_title": "yt-dlp",
+    "default_popup": "popup/yt-dlp.html"
   },
   "permissions": [
-    "nativeMessaging"
-  ]
+    "nativeMessaging",
+    "webRequest",
+    "<all_urls>"
+  ],
+  "content_security_policy": "script-src 'self' https://code.jquery.com; object-src 'self'"
 }
