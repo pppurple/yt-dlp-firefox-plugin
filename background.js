@@ -1,7 +1,8 @@
 /*
 On startup, connect to the "yt-dlp-executor" app.
 */
-let port = browser.runtime.connectNative("yt-dlp-executor");
+// connectNative(application). 'application' name must match /^\w+(\.\w+)*$/).
+let port = browser.runtime.connectNative("yt_dlp_executor");
 
 /*
 Listen for messages from a native app.
