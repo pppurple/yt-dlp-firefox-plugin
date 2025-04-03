@@ -1,0 +1,9 @@
+{
+  "name": "yt_dlp_executor",
+  "description": "Execute yt-dlp",
+  "path": "C:\\util\\yt-dlp-executor\\yt_dlp_executor_win.bat",
+  "type": "stdio",
+  "allowed_extensions": [
+    "yt-dlp-firefox@example.com"
+  ]
+}
