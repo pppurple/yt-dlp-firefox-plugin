@@ -7,7 +7,7 @@ let port = browser.runtime.connectNative("yt_dlp_executor");
 /*
 Listen for messages from a native app.
 */
-port.onMessage.addListener((response) => {
+async function listenFromNativeApp(response) {
     console.log("Received: " + response.type);
     if (response.type == "list") {
         var ignore = true;
@@ -80,12 +80,14 @@ port.onMessage.addListener((response) => {
         div.innerHTML = "Complete!!!";
         document.body.appendChild(div);
     }
-});
+};
+
+port.onMessage.addListener(listenFromNativeApp);
 
 /*
 Lister for popup js
 */
-browser.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+async function listenForPopup(message, sender, sendResponse) {
     // Get list from native app. (when icon clicked)
     if (message.init) {
         console.log("init");
@@ -108,4 +110,7 @@ browser.runtime.onMessage.addListener(function (message, sender, sendResponse) {
             port.postMessage({ type: "download", url: url, formatCode: message.formatCode });
         });
     }
-});
+};
+
+
+browser.runtime.onMessage.addListener(listenForPopup);
