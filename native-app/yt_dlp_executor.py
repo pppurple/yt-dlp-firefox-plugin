@@ -77,6 +77,7 @@ try:
             logger.info('command:' + subprocess.list2cmdline(command))
             res = subprocess.run(subprocess.list2cmdline(command), stdout=subprocess.PIPE, shell=True, encoding="shift-jis")
             r = {"res": res.stdout, "type":"download"}
+            sendMessage(encodeMessage(r))
 except AttributeError:
     # Python 2.x version (if sys.stdin.buffer is not defined)
     # Read a message from stdin and decode it.
