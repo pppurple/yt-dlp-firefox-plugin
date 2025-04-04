@@ -34,22 +34,65 @@ async function listenFromNativeApp(response) {
         const tblBody = document.createElement("tbody");
 
         // Create table.
-        for (const format of formats) {
-            const row = document.createElement("tr");
-            if (format.includes("audio only") || format.includes("video only")) {
-                continue;
-            }
-            const columns = format.split(/\s+/).slice(0, 12);
+        if (response.res.includes("tver.jp")) {
+            for (const format of formats) {
+                if (format.includes("video only")) {
+                    for (const audio of ["wa", "ba"]) {
+                        const row = document.createElement("tr");
 
-            for (let j = 0; j < columns.length; j++) {
-                const cell = document.createElement("td");
-                const cellText = document.createTextNode(columns[j]);
-                cell.setAttribute("id", columns[0]);
-                cell.appendChild(cellText);
-                row.appendChild(cell);
-            }
+                        if (audio === "wa") {
+                            row.style.backgroundColor = "lightblue";
+                        }
 
-            tblBody.appendChild(row);
+                        const columns = format.split(/\s+/).slice(0, 12);
+
+                        for (let j = 0; j < columns.length; j++) {
+                            const cell = document.createElement("td");
+                            let cellText;
+                            if (j == 0 || j == 2) {
+                                cellText = document.createTextNode(columns[j] + `+${audio}`);
+                            } else {
+                                cellText = document.createTextNode(columns[j]);
+                            }
+                            cell.setAttribute("id", columns[0] + `+${audio}`);
+                            cell.appendChild(cellText);
+                            row.appendChild(cell);
+                        }
+                        tblBody.appendChild(row);
+                    }
+                } else {
+                    const row = document.createElement("tr");
+                    const columns = format.split(/\s+/).slice(0, 12);
+
+                    for (let j = 0; j < columns.length; j++) {
+                        const cell = document.createElement("td");
+                        const cellText = document.createTextNode(columns[j]);
+                        cell.setAttribute("id", columns[0]);
+                        cell.appendChild(cellText);
+                        row.appendChild(cell);
+                    }
+
+                    tblBody.appendChild(row);
+                }
+            }
+        } else {
+            for (const format of formats) {
+                const row = document.createElement("tr");
+                if (format.includes("audio only") || format.includes("video only")) {
+                    continue;
+                }
+                const columns = format.split(/\s+/).slice(0, 12);
+
+                for (let j = 0; j < columns.length; j++) {
+                    const cell = document.createElement("td");
+                    const cellText = document.createTextNode(columns[j]);
+                    cell.setAttribute("id", columns[0]);
+                    cell.appendChild(cellText);
+                    row.appendChild(cell);
+                }
+
+                tblBody.appendChild(row);
+            }
         }
 
         // Add no id column (best) into the bottom
@@ -107,7 +150,11 @@ async function listenForPopup(message, sender, sendResponse) {
             let url = tabs[0].url;
             console.log("url: " + url);
             console.log("message.formatCode: " + message.formatCode);
-            port.postMessage({ type: "download", url: url, formatCode: message.formatCode });
+            port.postMessage({
+                type: "download",
+                url: url,
+                formatCode: message.formatCode,
+            });
         });
     }
 };
