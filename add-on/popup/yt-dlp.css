@@ -1,0 +1,17 @@
+#status-container {
+    margin-bottom: 10px;
+    padding: 5px;
+    border-bottom: 1px solid #ccc;
+}
+
+#status-container div {
+    margin: 5px 0;
+    padding: 5px;
+    background-color: #f5f5f5;
+    border-radius: 3px;
+}
+
+#list-container {
+    max-height: 400px;
+    overflow-y: auto;
+}
