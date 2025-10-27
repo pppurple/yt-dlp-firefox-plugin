@@ -1,12 +1,26 @@
 /*
-On startup, connect to the "yt-dlp-executor" app.
-*/
+ * On startup, connect to the "yt-dlp-executor" app.
+ */
+// connectNative(application). 'application' name must match /^\w+(\.\w+)*$/).
 let mainPort = browser.runtime.connectNative("yt_dlp_executor");
 
+/*
+ * Creates a new port connection to the native application.
+ * Used for communicating with the yt-dlp executor.
+ * @returns {runtime.Port} New port connection to native app
+ */
 function createNewPort() {
     return browser.runtime.connectNative("yt_dlp_executor");
 }
 
+/*
+ * Main message listener for native app responses.
+ * Handles format list display and download completion.
+ * @param {Object} response - Response from native app
+ * @param {string} response.type - Type of response ('list' or 'download')
+ * @param {string} response.res - Response content for list type
+ * @param {string} response.url - URL for download type
+ */
 async function listenFromNativeApp(response) {
     console.log("Received: " + response.type);
     if (response.type == "list") {
@@ -117,6 +131,15 @@ async function listenFromNativeApp(response) {
     }
 };
 
+/*
+ * Handles popup initialization and download requests.
+ * Creates separate ports for listing formats and downloading.
+ * @param {Object} message - Message from popup
+ * @param {boolean} message.init - True if initializing popup
+ * @param {string} message.formatCode - Format code for download
+ * @param {Object} sender - Message sender information
+ * @param {function} sendResponse - Callback function
+ */
 async function listenForPopup(message, sender, sendResponse) {
     if (message.init) {
         console.log("init");
@@ -126,11 +149,11 @@ async function listenForPopup(message, sender, sendResponse) {
             if (typeof url === "undefined") {
                 return;
             }
-            // リスト取得用に新しいポートを作成
+            // Create new port for format listing
             const listPort = createNewPort();
             listPort.onMessage.addListener((response) => {
                 if (response.type === "list") {
-                    // リスト表示の既存コードをここで実行
+                    // Parse format list from yt-dlp output
                     var ignore = true;
                     var lines = response.res.split('\n');
                     var formats = lines.filter(function (line) {
@@ -232,7 +255,7 @@ async function listenForPopup(message, sender, sendResponse) {
                     document.body.appendChild(tbl);
                     tbl.setAttribute("border", "2");
                 }
-                // 使用後にポートを閉じる
+                // Close port after use
                 listPort.disconnect();
             });
             listPort.postMessage({ type: "list", url: url });
@@ -246,7 +269,7 @@ async function listenForPopup(message, sender, sendResponse) {
             console.log("url: " + url);
             console.log("message.formatCode: " + message.formatCode);
 
-            // ダウンロード用に新しいポートを作成
+            // Create new port for download operation
             const downloadPort = createNewPort();
             downloadPort.onMessage.addListener((response) => {
                 if (response.type === "download") {
@@ -264,6 +287,7 @@ async function listenForPopup(message, sender, sendResponse) {
     }
 };
 
-// メインのポートリスナー（初期化用）
+// Initialize main port listener for native app communication
 mainPort.onMessage.addListener(listenFromNativeApp);
+// Listen for messages from popup
 browser.runtime.onMessage.addListener(listenForPopup);
