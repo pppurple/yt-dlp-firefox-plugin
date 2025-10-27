@@ -1,3 +1,3 @@
 @echo off
 
-call python c:\\util\\yt-dlp-executor\\yt_dlp_executor.py
+call "C:\Users\<USERNAME>\AppData\Local\Programs\Python\<VERSION>\python.exe" "c:\util\yt-dlp-executor\yt_dlp_executor.py"
