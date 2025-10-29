@@ -177,9 +177,16 @@ async function listenForPopup(message, sender, sendResponse) {
 
             // Create new port for download operation
             const downloadPort = createNewPort();
+            // Add to active downloads and update badge
+            activeDownloads.add(url);
+            updateBadge();
+
             downloadPort.onMessage.addListener((response) => {
                 if (response.type === "download") {
                     console.log("Download complete:", response.url);
+                    // Remove from active downloads and update badge
+                    activeDownloads.delete(url);
+                    updateBadge();
                     downloadPort.disconnect();
                 }
             });
@@ -192,6 +199,22 @@ async function listenForPopup(message, sender, sendResponse) {
         });
     }
 };
+
+// Store active downloads count
+let activeDownloads = new Set();
+
+/*
+ * Updates the browser action badge with current download count
+ */
+function updateBadge() {
+    const count = activeDownloads.size;
+    if (count > 0) {
+        browser.browserAction.setBadgeText({ text: count.toString() });
+        browser.browserAction.setBadgeBackgroundColor({ color: "#4CAF50" }); // Green color
+    } else {
+        browser.browserAction.setBadgeText({ text: "" });
+    }
+}
 
 // Initialize main port listener for native app communication
 mainPort.onMessage.addListener(listenFromNativeApp);
