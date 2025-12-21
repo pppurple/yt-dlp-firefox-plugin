@@ -151,7 +151,8 @@ async function listenForPopup(message, sender, sendResponse) {
         console.log("init");
         browser.tabs.query({ active: true, lastFocusedWindow: true }, tabs => {
             let url = tabs[0].url;
-            console.log("url: " + url);
+            url = url.split('&')[0];  // Remove everything after '&' to avoid shell interpretation issues
+            console.log("sanitized url: " + url);
             if (typeof url === "undefined") {
                 return;
             }
@@ -172,7 +173,8 @@ async function listenForPopup(message, sender, sendResponse) {
     if (message.formatCode) {
         browser.tabs.query({ active: true, lastFocusedWindow: true }, tabs => {
             let url = tabs[0].url;
-            console.log("url: " + url);
+            url = url.split('&')[0];  // Remove everything after '&' to avoid shell interpretation issues
+            console.log("sanitized url: " + url);
             console.log("message.formatCode: " + message.formatCode);
 
             // Create new port for download operation
